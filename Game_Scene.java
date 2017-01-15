@@ -2,10 +2,12 @@ import java.util.*;
 
 class Game_Scene extends asd.Scene
 {
+	asd.TextureObject2D[] obj_pieces;
+	asd.Layer2D layer;
     protected void OnRegistered()
     {
 		// レイヤーを作る。
- 		asd.Layer2D layer = new asd.Layer2D();
+ 		layer = new asd.Layer2D();
 		AddLayer(layer);
  
         // 背景画像を読み込み (略) レイヤーにオブジェクトを追加する。
@@ -15,7 +17,7 @@ class Game_Scene extends asd.Scene
 		layer.AddObject(obj);
 
 		// 駒の画像を読み込み、144個のオブジェクトに設定する。
-		asd.TextureObject2D[] obj_pieces = new asd.TextureObject2D[144];
+		obj_pieces = new asd.TextureObject2D[144];
 		asd.Texture2D tex_pieces = asd.Engine.getGraphics().CreateTexture2D("res\\pieces.png");
 
 		// 駒の描画位置をランダムにする
@@ -35,7 +37,7 @@ class Game_Scene extends asd.Scene
 		// 画像から駒一つ分を切り出して登録したのち、描画位置を設定する。
 		for (int i=0; i<144; i++)
 		{
-			obj_pieces[i] = new asd.TextureObject2D();
+			obj_pieces[i] = new PieceObject();
 			obj_pieces[i].setTexture(tex_pieces);
 			obj_pieces[i].setSrc(new asd.RectF((i/4)*40, 0, 40, 40));  // (x, y, 辺の長さ, 辺の長さ)
 			System.out.println(rnd_position[i]);
@@ -46,11 +48,8 @@ class Game_Scene extends asd.Scene
 	}
 	protected void OnUpdated() {
 		// マウスの左ボタンが押されるのを待つ。
-		if((asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push))
-		{
-			// フェードアウト・インによるシーン遷移を開始する。
-			// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
-			asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
-		}
+		// フェードアウト・インによるシーン遷移を開始する。
+		// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
+		//asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
     }
 }
