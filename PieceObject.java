@@ -9,8 +9,8 @@ class PieceObject extends asd.TextureObject2D
         asd.Vector2DF pos0 = getPosition();  // 駒の左上の座標
         asd.Vector2DF pos1 = asd.Vector2DF.Add(getPosition(), new asd.Vector2DF(40, 40));  // 駒の右下の座標
         if (mousePos.X < pos0.X || pos1.X <= mousePos.X || mousePos.Y < pos0.Y || pos1.Y <= mousePos.Y) return;
-        //if (mousePos.X < pos0.X || pos0.X + 40 <= mousePos.X || mousePos.Y < pos0.Y || pos0.Y + 40 <= mousePos.Y) return;
 
+        // 駒の色を変更
         if (!isSelected)
         {
             isSelected = true;

@@ -46,6 +46,7 @@ class Game_Scene extends asd.Scene
 			layer.AddObject(obj_pieces[i]);
 		}
 	}
+
 	protected void OnUpdated() {
 		// マウスの左ボタンが押されるのを待つ。
 		// フェードアウト・インによるシーン遷移を開始する。
