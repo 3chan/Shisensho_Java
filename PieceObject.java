@@ -30,6 +30,8 @@ class PieceObject extends asd.TextureObject2D
     {
         // クラス外から駒の絵柄番号を登録
         pieceTexture = pTexture;
+        // テクスチャから駒1つ分を切り出す
+        setSrc(new asd.RectF(pTexture*40, 0, 40, 40));  // (x, y, 辺の長さ, 辺の長さ)
     }
 
     int getPieceTexture()
@@ -40,8 +42,10 @@ class PieceObject extends asd.TextureObject2D
 
     void setPiecePosition(int pPosition)
     {
-        // クラス外から駒の位置を登録
+        // クラス外から駒の位置番号を登録
         piecePosition = pPosition;
+        // 駒の描画位置を設定する
+        setPosition(new asd.Vector2DF(50 + (pPosition % 12) * 40, 50 + (pPosition / 12) * 40));
     }
 
     int getPiecePosition()
@@ -49,6 +53,4 @@ class PieceObject extends asd.TextureObject2D
         // クラス外から駒の位置を参照
         return piecePosition;
     }
-
-
 }

@@ -20,11 +20,13 @@ class Game_Scene extends asd.Scene
 		obj_pieces = new PieceObject[144];
 		asd.Texture2D tex_pieces = asd.Engine.getGraphics().CreateTexture2D("res\\pieces.png");
 
-		// 駒の位置を初期化する
+		// 駒の位置を初期化し、テクスチャを登録する
 		for (int i=0; i<144; i++)
 		{
 			obj_pieces[i] = new PieceObject();
 			obj_pieces[i].setPiecePosition(i);
+			obj_pieces[i].setTexture(tex_pieces);
+			obj_pieces[i].setPieceTexture(i/4);
 		}
 
 		// 駒の描画位置をランダムにする
@@ -33,14 +35,8 @@ class Game_Scene extends asd.Scene
 			ShufflePiecePosition(obj_pieces);
 		}
 
-		// 画像から駒一つ分を切り出して登録したのち、描画位置を設定する。
 		for (int i=0; i<144; i++)
 		{
-			obj_pieces[i].setTexture(tex_pieces);
-			obj_pieces[i].setSrc(new asd.RectF((i/4)*40, 0, 40, 40));  // (x, y, 辺の長さ, 辺の長さ)
-			obj_pieces[i].setPieceTexture(i/4);
-			System.out.println(obj_pieces[i].getPiecePosition());
-			obj_pieces[i].setPosition(new asd.Vector2DF(50 + (obj_pieces[i].getPiecePosition() % 12) * 40, 50 + (obj_pieces[i].getPiecePosition() / 12) * 40));
 			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。		
 			layer.AddObject(obj_pieces[i]);
 		}
@@ -59,8 +55,8 @@ class Game_Scene extends asd.Scene
 		Random rnd = new Random();
 		int rnd1 = rnd.nextInt(144);
 		int rnd2 = rnd.nextInt(144);
-		int buf = obj_pieces[rnd1].getPiecePosition();
-		obj_pieces[rnd1].setPiecePosition(obj_pieces[rnd2].getPiecePosition());
-		obj_pieces[rnd2].setPiecePosition(buf);
+		int buf = obj_pieces[rnd1].getPieceTexture();
+		obj_pieces[rnd1].setPieceTexture(obj_pieces[rnd2].getPieceTexture());
+		obj_pieces[rnd2].setPieceTexture(buf);
 	}
 }
