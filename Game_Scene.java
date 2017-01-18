@@ -37,7 +37,7 @@ class Game_Scene extends asd.Scene
 
 		for (int i=0; i<144; i++)
 		{
-			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。		
+			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
 			layer.AddObject(obj_pieces[i]);
 		}
 	}
