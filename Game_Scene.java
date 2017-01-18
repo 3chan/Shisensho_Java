@@ -21,13 +21,15 @@ class Game_Scene extends asd.Scene
 		asd.Texture2D tex_pieces = asd.Engine.getGraphics().CreateTexture2D("res\\pieces.png");
 
 		// 駒の位置を初期化する
-		for (int i=0; i<144; i++) {
+		for (int i=0; i<144; i++)
+		{
 			obj_pieces[i] = new PieceObject();
 			obj_pieces[i].setPiecePosition(i);
 		}
 
 		// 駒の描画位置をランダムにする
-		for (int i=0; i<1000; i++) {
+		for (int i=0; i<1000; i++)
+		{
 			ShufflePiecePosition(obj_pieces);
 		}
 
@@ -44,14 +46,16 @@ class Game_Scene extends asd.Scene
 		}
 	}
 
-	protected void OnUpdated() {
+	protected void OnUpdated()
+	{
 		// マウスの左ボタンが押されるのを待つ。
 		// フェードアウト・インによるシーン遷移を開始する。
 		// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
 		//asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
     }
 
-	void ShufflePiecePosition(PieceObject[] pieces){
+	void ShufflePiecePosition(PieceObject[] pieces)
+	{
 		Random rnd = new Random();
 		int rnd1 = rnd.nextInt(144);
 		int rnd2 = rnd.nextInt(144);
