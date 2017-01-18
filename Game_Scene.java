@@ -2,7 +2,7 @@ import java.util.*;
 
 class Game_Scene extends asd.Scene
 {
-	asd.TextureObject2D[] obj_pieces;
+	PieceObject[] obj_pieces;
 	asd.Layer2D layer;
     protected void OnRegistered()
     {
@@ -10,38 +10,35 @@ class Game_Scene extends asd.Scene
  		layer = new asd.Layer2D();
 		AddLayer(layer);
  
-        // 背景画像を読み込み (略) レイヤーにオブジェクトを追加する。
-		asd.TextureObject2D obj = new asd.TextureObject2D();
+		// 背景画像を読み込み (略) レイヤーにオブジェクトを追加する。
+		PieceObject obj = new PieceObject();
 		asd.Texture2D tex = asd.Engine.getGraphics().CreateTexture2D("res\\game.png");
 		obj.setTexture(tex);
 		layer.AddObject(obj);
 
 		// 駒の画像を読み込み、144個のオブジェクトに設定する。
-		obj_pieces = new asd.TextureObject2D[144];
+		obj_pieces = new PieceObject[144];
 		asd.Texture2D tex_pieces = asd.Engine.getGraphics().CreateTexture2D("res\\pieces.png");
 
-		// 駒の描画位置をランダムにする
-		Random rnd = new Random();
-		Integer[] rnd_position = new Integer[144];
+		// 駒の位置を初期化する
 		for (int i=0; i<144; i++) {
-			rnd_position[i] = i;
+			obj_pieces[i] = new PieceObject();
+			obj_pieces[i].setPiecePosition(i);
 		}
-		for(int i=0; i<144; i++)
-		{
-			int int_rnd = rnd.nextInt(144);
-			int buf = rnd_position[i];
-			rnd_position[i] = rnd_position[int_rnd];
-			rnd_position[int_rnd] = buf;
+
+		// 駒の描画位置をランダムにする
+		for (int i=0; i<1000; i++) {
+			ShufflePiecePosition(obj_pieces);
 		}
 
 		// 画像から駒一つ分を切り出して登録したのち、描画位置を設定する。
 		for (int i=0; i<144; i++)
 		{
-			obj_pieces[i] = new PieceObject();
 			obj_pieces[i].setTexture(tex_pieces);
 			obj_pieces[i].setSrc(new asd.RectF((i/4)*40, 0, 40, 40));  // (x, y, 辺の長さ, 辺の長さ)
-			System.out.println(rnd_position[i]);
-			obj_pieces[i].setPosition(new asd.Vector2DF(50 + (rnd_position[i] % 12) * 40, 50 + (rnd_position[i] / 12) * 40));
+			obj_pieces[i].setPieceTexture(i/4);
+			System.out.println(obj_pieces[i].getPiecePosition());
+			obj_pieces[i].setPosition(new asd.Vector2DF(50 + (obj_pieces[i].getPiecePosition() % 12) * 40, 50 + (obj_pieces[i].getPiecePosition() / 12) * 40));
 			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。		
 			layer.AddObject(obj_pieces[i]);
 		}
@@ -53,4 +50,13 @@ class Game_Scene extends asd.Scene
 		// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
 		//asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
     }
+
+	void ShufflePiecePosition(PieceObject[] pieces){
+		Random rnd = new Random();
+		int rnd1 = rnd.nextInt(144);
+		int rnd2 = rnd.nextInt(144);
+		int buf = obj_pieces[rnd1].getPiecePosition();
+		obj_pieces[rnd1].setPiecePosition(obj_pieces[rnd2].getPiecePosition());
+		obj_pieces[rnd2].setPiecePosition(buf);
+	}
 }
