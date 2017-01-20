@@ -32,7 +32,7 @@ class Game_Scene extends asd.Scene
 		// 駒の描画位置をランダムにする
 		for (int i=0; i<1000; i++)
 		{
-			ShufflePiecePosition(obj_pieces);
+			ShufflePiecePosition();
 		}
 
 		for (int i=0; i<144; i++)
@@ -44,13 +44,14 @@ class Game_Scene extends asd.Scene
 
 	protected void OnUpdated()
 	{
+		CheckPaired();
 		// マウスの左ボタンが押されるのを待つ。
 		// フェードアウト・インによるシーン遷移を開始する。
 		// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
 		//asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
     }
 
-	void ShufflePiecePosition(PieceObject[] pieces)
+	void ShufflePiecePosition()
 	{
 		Random rnd = new Random();
 		int rnd1 = rnd.nextInt(144);
@@ -58,5 +59,97 @@ class Game_Scene extends asd.Scene
 		int buf = obj_pieces[rnd1].getPieceTexture();
 		obj_pieces[rnd1].setPieceTexture(obj_pieces[rnd2].getPieceTexture());
 		obj_pieces[rnd2].setPieceTexture(buf);
+	}
+
+	void CheckPaired()
+	{
+		int p1 = -1;
+		int p2 = -1;
+		boolean paired = false;
+		
+		// 選択中の駒を走査
+		for (int i=0; i<144; i++) {
+			if (!obj_pieces[i].isColored) continue;
+			if (p1 == -1)
+			{
+				p1 = i;
+				System.out.println("p1 = " + p1);
+			}
+			else
+			{
+				p2 = i;
+				System.out.println("p2 = " + p2);
+			}
+		}
+		
+		// 選択なしまたは1駒のみ選択中の場合何もしない
+		if (p1 == -1 || p2 == -1) return;
+
+		if (p1/12 == p2/12)
+		{
+			// y座標が同じ場合 2駒間がクリアか"行"を調べる
+			System.out.println("y座標が同じ場合");
+			paired = CheckLine(p1, p2, true);
+		}
+		else if (p1%12 == p2%12)
+		{
+			// x座標が同じ場合 2駒間がクリアか"列"を調べる
+			System.out.println("x座標が同じ場合");
+			paired = CheckLine(p1, p2, false);
+		}
+
+		/*
+		else if 　// 2駒のx座標間がクリアな"行"があるか調べる
+		{
+		}
+		else if 　// 2駒のy座標間がクリアな"列"があるか調べる
+		{
+		}
+		*/
+
+		if (paired) {
+			System.out.println("駒を消します");
+			layer.RemoveObject(obj_pieces[p1]);
+			layer.RemoveObject(obj_pieces[p2]);
+			System.out.println("駒を消しました");
+			obj_pieces[p1].setIsColored(false);
+			obj_pieces[p2].setIsColored(false);
+		}
+	}
+	
+	// xまたはy座標が等しい2点間に駒があるか調べる
+	boolean CheckLine(int p1, int p2, boolean isX) {  // p1 < p2
+		int add;
+		// 走査方向を決める
+		if (isX)
+		{
+			add = 1;
+		}
+		else
+		{
+			add = 12;
+		}
+
+		for (int i = p1 + add; i <= p2; i += add)
+		{
+			// 2つの駒が隣り合っていた場合
+			if (i == p2)
+			{
+				return true;
+			}
+			// 現在調べている position が空である場合
+			else if (obj_pieces[i] == null)
+			{
+				continue;
+			}
+			// 現在調べている position に他の駒がある場合
+			else
+			{
+				return false;
+			}
+		}
+
+		// 到達しないはず
+		return false;
 	}
 }

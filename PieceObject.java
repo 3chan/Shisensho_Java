@@ -54,7 +54,7 @@ class PieceObject extends asd.TextureObject2D
         return piecePosition;
     }
 
-    void setPieceState(boolean pState)
+    void setIsColored(boolean pState)
     {
         isColored = pState;
     }
