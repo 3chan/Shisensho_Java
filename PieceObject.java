@@ -5,7 +5,12 @@ class PieceObject extends asd.TextureObject2D
     int piecePosition;  // 駒の盤上の位置を 0~143 で表す
     protected void OnUpdate()
     {   // シーン・レイヤーに関してはOnUpdated()またはOnUpdating()
-        if((asd.Engine.getMouse().getLeftButton().getButtonState() != asd.MouseButtonState.Push)) return;  // return する条件を先に書くと {} が増えなくてよい
+        if((asd.Engine.getMouse().getLeftButton().getButtonState() != asd.MouseButtonState.Push))  // return する条件を先に書くと {} が増えなくてよい
+        {
+            if (!isColored) setColor(new asd.Color(255,255,255));
+            else setColor(new asd.Color(255,0,0));
+            return;
+        }
 
         // 駒の座標を取得して、mousePositionと比較
         asd.Vector2DF mousePos = asd.Engine.getMouse().getPosition();

@@ -83,8 +83,18 @@ class Game_Scene extends asd.Scene
 		}
 		
 		// 選択なしまたは1駒のみ選択中の場合何もしない
-		if (p1 == -1 || p2 == -1) return;
-
+		if (p1 == -1 || p2 == -1)
+		{
+			return;
+		}
+		// 2駒のテクスチャが異なる場合選択を解除する
+		else if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture())
+		{
+			obj_pieces[p1].setIsColored(false);
+			obj_pieces[p2].setIsColored(false);
+			return;
+		}
+			
 		if (p1/12 == p2/12)
 		{
 			// y座標が同じ場合 2駒間がクリアか"行"を調べる
@@ -112,9 +122,9 @@ class Game_Scene extends asd.Scene
 			layer.RemoveObject(obj_pieces[p1]);
 			layer.RemoveObject(obj_pieces[p2]);
 			System.out.println("駒を消しました");
-			obj_pieces[p1].setIsColored(false);
-			obj_pieces[p2].setIsColored(false);
 		}
+		obj_pieces[p1].setIsColored(false);
+		obj_pieces[p2].setIsColored(false);
 	}
 	
 	// xまたはy座標が等しい2点間に駒があるか調べる
