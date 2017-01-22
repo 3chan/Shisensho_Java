@@ -69,7 +69,7 @@ class Game_Scene extends asd.Scene
 		
 		// 選択中の駒を走査
 		for (int i=0; i<144; i++) {
-			if (!obj_pieces[i].isColored) continue;
+			if (obj_pieces[i] == null || !obj_pieces[i].isColored) continue;
 			if (p1 == -1)
 			{
 				p1 = i;
@@ -121,10 +121,14 @@ class Game_Scene extends asd.Scene
 			System.out.println("駒を消します");
 			layer.RemoveObject(obj_pieces[p1]);
 			layer.RemoveObject(obj_pieces[p2]);
+			obj_pieces[p1] = null;
+			obj_pieces[p2] = null;
 			System.out.println("駒を消しました");
 		}
-		obj_pieces[p1].setIsColored(false);
-		obj_pieces[p2].setIsColored(false);
+		else {
+			obj_pieces[p1].setIsColored(false);
+			obj_pieces[p2].setIsColored(false);
+		}
 	}
 	
 	// xまたはy座標が等しい2点間に駒があるか調べる
@@ -150,11 +154,13 @@ class Game_Scene extends asd.Scene
 			// 現在調べている position が空である場合
 			else if (obj_pieces[i] == null)
 			{
+				System.out.println("空");
 				continue;
 			}
 			// 現在調べている position に他の駒がある場合
 			else
 			{
+				System.out.println("使用中");
 				return false;
 			}
 		}
