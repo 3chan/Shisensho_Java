@@ -107,15 +107,11 @@ class Game_Scene extends asd.Scene
 			System.out.println("x座標が同じ場合");
 			paired = CheckLine(p1, p2, false);
 		}
-
-		/*
-		else if 　// 2駒のx座標間がクリアな"行"があるか調べる
+		else
 		{
+			// 2駒間に1角以上ある場合を調べる
+			paired = CheckLines(p1, p2);
 		}
-		else if 　// 2駒のy座標間がクリアな"列"があるか調べる
-		{
-		}
-		*/
 
 		if (paired) {
 			System.out.println("駒を消します");
@@ -166,6 +162,59 @@ class Game_Scene extends asd.Scene
 		}
 
 		// 到達しないはず
+		return false;
+	}
+
+	boolean CheckLines(int p1, int p2) {
+		boolean slash;  // 2駒が対角に位置する長方形を作るとき、2駒の配置が右上-左下であるか
+		int point0, point1, point2, point3;  // 左上, 右上, 左下, 右下
+
+		if (p2%12 < p1%12) slash = true;
+		else slash = false;
+
+		if (slash) {
+			point0 = p1 - (p1%12 - p2%12);
+			point1 = p1;
+			point2 = p2;
+			point3 = p2 + (p1%12 - p2%12);
+		}
+		else {
+			point0 = p1;
+			point1 = p1 - (p1%12 - p2%12);
+			point2 = p2 + (p1%12 - p2%12);
+			point3 = p2;
+		}
+
+		int l = point0;
+		int r = point1;
+		for (int i = point0; i <= point3; i += 12) {
+			if (CheckLine(l, r, true)) {
+				if (slash) {
+					if (CheckLine(point1, r, false) && CheckLine(l, point2, false)) return true;
+				}
+				else {
+					if (CheckLine(point0, l, false) && CheckLine(r, point3, false)) return true;
+				}
+			}
+			l += 12;
+			r += 12;
+		}
+
+		int a = point0;
+		int b = point2;
+		for (int i = point0; i <= point1; i++) {
+			if (CheckLine(a, b, false)) {
+				if (slash) {
+					if (CheckLine(a, point1, true) && CheckLine(point2, b, true)) return true;
+				}
+				else {
+					if (CheckLine(point0, a, true) && CheckLine(b, point3, true)) return true;
+				}
+			}
+			a++;
+			b++;
+		}
+
 		return false;
 	}
 }
