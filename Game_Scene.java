@@ -145,6 +145,9 @@ class Game_Scene extends asd.Scene
 			// 2‚Â‚Ì‹î‚ª—×‚è‡‚Á‚Ä‚¢‚½ê‡
 			if (i == p2)
 			{
+				// 2‹î‚Ì texture ‚ªˆê’v‚µ‚Ä‚¢‚é‚© (CheckLines ‚©‚çŒÄ‚Î‚ê‚½‚É•K—v)
+				if (obj_pieces[p1] == null || obj_pieces[p2] == null) return true;
+				if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture()) return false;
 				return true;
 			}
 			// Œ»İ’²‚×‚Ä‚¢‚é position ‚ª‹ó‚Å‚ ‚éê‡
@@ -189,19 +192,19 @@ class Game_Scene extends asd.Scene
 		int r = point1;
 		for (int i = point0; i <= point3; i += 12) {
 			System.out.println("l = " + l + "\nr = " + r);
+			System.out.println("CheckLine(l, r, true) == " + CheckLine(l, r, true));
 			if (CheckLine(l, r, true)) {
 				if (slash) {
-					if ((CheckLine(point1, r, false) || point1 == r) && (CheckLine(l, point2, false) || point2 == l)) return true;
 					System.out.println("CheckLine(point1, r, false) = " + CheckLine(point1, r, false));
 					System.out.println("CheckLine(l, point2, false) = " + CheckLine(l, point2, false));
+					if ((CheckLine(point1, r, false) || point1 == r) && (CheckLine(l, point2, false) || point2 == l)) return true;
 				}
 				else {
-					if ((CheckLine(point0, l, false) || point0 == l) && (CheckLine(r, point3, false) || point3 == r)) return true;
 					System.out.println("CheckLine(point0, l, false) = " + CheckLine(point0, l, false));
 					System.out.println("CheckLine(r, point3, false) = " + CheckLine(r, point3, false));
+					if ((CheckLine(point0, l, false) || point0 == l) && (CheckLine(r, point3, false) || point3 == r)) return true;
 				}
 			}
-			System.out.println("CheckLine(" + l + ", " + r + ", true) == " + CheckLine(l, r, true));
 			l += 12;
 			r += 12;
 		}
@@ -209,11 +212,17 @@ class Game_Scene extends asd.Scene
 		int a = point0;
 		int b = point2;
 		for (int i = point0; i <= point1; i++) {
+			System.out.println("a = " + a + "\nb = " + b);
+			System.out.println("CheckLine(a, b, false) == " + CheckLine(a, b, false));
 			if (CheckLine(a, b, false)) {
 				if (slash) {
+					System.out.println("CheckLine(a, point1, true) = " + CheckLine(a, point1, true));
+					System.out.println("CheckLine(point2, b, true) = " + CheckLine(point2, b, true));
 					if (CheckLine(a, point1, true) && CheckLine(point2, b, true)) return true;
 				}
 				else {
+					System.out.println("CheckLine(point0, a, true) = " + CheckLine(point0, a, true));
+					System.out.println("CheckLine(b, point3, true) = " + CheckLine(b, point3, true));				
 					if (CheckLine(point0, a, true) && CheckLine(b, point3, true)) return true;
 				}
 			}
