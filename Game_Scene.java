@@ -188,14 +188,20 @@ class Game_Scene extends asd.Scene
 		int l = point0;
 		int r = point1;
 		for (int i = point0; i <= point3; i += 12) {
+			System.out.println("l = " + l + "\nr = " + r);
 			if (CheckLine(l, r, true)) {
 				if (slash) {
-					if (CheckLine(point1, r, false) && CheckLine(l, point2, false)) return true;
+					if ((CheckLine(point1, r, false) || point1 == r) && (CheckLine(l, point2, false) || point2 == l)) return true;
+					System.out.println("CheckLine(point1, r, false) = " + CheckLine(point1, r, false));
+					System.out.println("CheckLine(l, point2, false) = " + CheckLine(l, point2, false));
 				}
 				else {
-					if (CheckLine(point0, l, false) && CheckLine(r, point3, false)) return true;
+					if ((CheckLine(point0, l, false) || point0 == l) && (CheckLine(r, point3, false) || point3 == r)) return true;
+					System.out.println("CheckLine(point0, l, false) = " + CheckLine(point0, l, false));
+					System.out.println("CheckLine(r, point3, false) = " + CheckLine(r, point3, false));
 				}
 			}
+			System.out.println("CheckLine(" + l + ", " + r + ", true) == " + CheckLine(l, r, true));
 			l += 12;
 			r += 12;
 		}
