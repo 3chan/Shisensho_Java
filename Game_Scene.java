@@ -67,7 +67,7 @@ class Game_Scene extends asd.Scene
 		int p2 = -1;
 		boolean paired = false;
 		
-		// 選択中の駒を走査
+		// 選択中の駒を検出
 		for (int i=0; i<144; i++) {
 			if (obj_pieces[i] == null || !obj_pieces[i].isColored) continue;
 			if (p1 == -1)
@@ -94,24 +94,25 @@ class Game_Scene extends asd.Scene
 			obj_pieces[p2].setIsColored(false);
 			return;
 		}
-			
+
+		// y座標が同じ場合 2駒間がクリアか"行"を調べる	
 		if (p1/12 == p2/12)
 		{
-			// y座標が同じ場合 2駒間がクリアか"行"を調べる
 			System.out.println("y座標が同じ場合");
 			paired = CheckLine(p1, p2, true);
 		}
-		else if (p1%12 == p2%12)
+
+		// x座標が同じ場合 2駒間がクリアか"列"を調べる
+		if (p1%12 == p2%12)
 		{
-			// x座標が同じ場合 2駒間がクリアか"列"を調べる
 			System.out.println("x座標が同じ場合");
 			paired = CheckLine(p1, p2, false);
+			// paired = CheckLines(p1, p2, true);
 		}
-		else
-		{
-			// 2駒間に1角以上ある場合を調べる
-			paired = CheckLines(p1, p2);
-		}
+
+		// 2駒間に1角以上ある場合を調べる
+		if (!paired) paired = CheckLines(p1, p2, true);
+		if (!paired) paired = CheckLines(p1, p2, false);
 
 		if (paired) {
 			System.out.println("駒を消します");
@@ -130,6 +131,7 @@ class Game_Scene extends asd.Scene
 	// xまたはy座標が等しい2点間に駒があるか調べる
 	boolean CheckLine(int p1, int p2, boolean isX) {  // p1 < p2
 		int add;
+
 		// 走査方向を決める
 		if (isX)
 		{
@@ -140,14 +142,20 @@ class Game_Scene extends asd.Scene
 			add = 12;
 		}
 
+		// p1 < p2 とする
+		if (p2 < p1) {
+			int buff = p1;
+			p1 = p2;
+			p2 = buff;
+		}
+
+		if (p1 == p2) return true;
+
 		for (int i = p1 + add; i <= p2; i += add)
 		{
-			// 2つの駒が隣り合っていた場合
+			// ペアが成立した場合
 			if (i == p2)
 			{
-				// 2駒の texture が一致しているか (CheckLines から呼ばれた時に必要)
-				if (obj_pieces[p1] == null || obj_pieces[p2] == null) return true;
-				if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture()) return false;
 				return true;
 			}
 			// 現在調べている position が空である場合
@@ -168,66 +176,46 @@ class Game_Scene extends asd.Scene
 		return false;
 	}
 
-	boolean CheckLines(int p1, int p2) {
-		boolean slash;  // 2駒が対角に位置する長方形を作るとき、2駒の配置が右上-左下であるか
-		int point0, point1, point2, point3;  // 左上, 右上, 左下, 右下
+	boolean CheckLines(int p1, int p2, boolean isX) {
+		int add, addLine;
+		int side1, side2;
 
-		if (p2%12 < p1%12) slash = true;
-		else slash = false;
-
-		if (slash) {
-			point0 = p1 - (p1%12 - p2%12);
-			point1 = p1;
-			point2 = p2;
-			point3 = p2 + (p1%12 - p2%12);
+		// 走査方向を決める
+		if (isX) {
+			add = 12;
+			addLine = 1;
+			side1 = p1 - p1%12;
+			side2 = p2 - p2%12;
 		}
 		else {
-			point0 = p1;
-			point1 = p1 - (p1%12 - p2%12);
-			point2 = p2 + (p1%12 - p2%12);
-			point3 = p2;
+			add = 1;
+			addLine = 12;
+			side1 = p1%12;
+			side2 = p2%12;
 		}
 
-		int l = point0;
-		int r = point1;
-		for (int i = point0; i <= point3; i += 12) {
-			System.out.println("l = " + l + "\nr = " + r);
-			System.out.println("CheckLine(l, r, true) == " + CheckLine(l, r, true));
-			if (CheckLine(l, r, true)) {
-				if (slash) {
-					System.out.println("CheckLine(point1, r, false) = " + CheckLine(point1, r, false));
-					System.out.println("CheckLine(l, point2, false) = " + CheckLine(l, point2, false));
-					if ((CheckLine(point1, r, false) || point1 == r) && (CheckLine(l, point2, false) || point2 == l)) return true;
-				}
-				else {
-					System.out.println("CheckLine(point0, l, false) = " + CheckLine(point0, l, false));
-					System.out.println("CheckLine(r, point3, false) = " + CheckLine(r, point3, false));
-					if ((CheckLine(point0, l, false) || point0 == l) && (CheckLine(r, point3, false) || point3 == r)) return true;
-				}
-			}
-			l += 12;
-			r += 12;
+		// 12x12 外
+		System.out.println("12x12 外");
+		System.out.println("CheckLine(side1, p1, isX) = " + CheckLine(side1, p1, isX));
+		System.out.println("CheckLine(side2, p2, isX) = " + CheckLine(side2, p2, isX));
+		System.out.println("CheckLine(side1 + 11, p1, isX) = "+ CheckLine(side1 + 11, p1, isX));
+		System.out.println("CheckLine(side2 + 11, p2, isX) = "+ CheckLine(side2 + 11, p2, isX));
+		if ((CheckLine(side1, p1, isX) && CheckLine(side2, p2, isX)) || 
+			 CheckLine(side1 + addLine*11, p1, isX) && CheckLine(side2 + addLine*11, p2, isX)) {
+			return true;
 		}
 
-		int a = point0;
-		int b = point2;
-		for (int i = point0; i <= point1; i++) {
-			System.out.println("a = " + a + "\nb = " + b);
-			System.out.println("CheckLine(a, b, false) == " + CheckLine(a, b, false));
-			if (CheckLine(a, b, false)) {
-				if (slash) {
-					System.out.println("CheckLine(a, point1, true) = " + CheckLine(a, point1, true));
-					System.out.println("CheckLine(point2, b, true) = " + CheckLine(point2, b, true));
-					if (CheckLine(a, point1, true) && CheckLine(point2, b, true)) return true;
-				}
-				else {
-					System.out.println("CheckLine(point0, a, true) = " + CheckLine(point0, a, true));
-					System.out.println("CheckLine(b, point3, true) = " + CheckLine(b, point3, true));				
-					if (CheckLine(point0, a, true) && CheckLine(b, point3, true)) return true;
-				}
+		// 12x12 内
+		System.out.println("12x12 内");
+		for (int i = 0; i < 12; i++) {
+			System.out.println("CheckLine(side1, side2, !isX) = " + CheckLine(side1, side2, !isX));
+			if (CheckLine(side1, side2, !isX)) {
+				System.out.println("CheckLine(side1, p1, isX) = " + CheckLine(side1, p1, isX));
+				System.out.println("CheckLine(side2, p2, isX) = " + CheckLine(side2, p2, isX));
+				if (CheckLine(side1, p1, isX) && CheckLine(side2, p2, isX)) return true;
+				side1 += addLine;
+				side2 += addLine;
 			}
-			a++;
-			b++;
 		}
 
 		return false;
