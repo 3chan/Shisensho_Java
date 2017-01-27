@@ -30,7 +30,7 @@ class Game_Scene extends asd.Scene
 		}
 
 		// 駒の描画位置をランダムにする
-		for (int i=0; i<1000; i++)
+		for (int i=0; i<800; i++)
 		{
 			ShufflePiecePosition();
 		}
@@ -45,10 +45,14 @@ class Game_Scene extends asd.Scene
 	protected void OnUpdated()
 	{
 		CheckPaired();
-		// マウスの左ボタンが押されるのを待つ。
-		// フェードアウト・インによるシーン遷移を開始する。
-		// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
-		//asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+		if (CheckClear()) {
+			System.out.println("画面遷移します");
+			asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+			try {
+				Thread.sleep(3000); //3000ミリ秒Sleepする
+			}
+			catch(InterruptedException e) {}
+		}
     }
 
 	void ShufflePiecePosition()
@@ -88,29 +92,13 @@ class Game_Scene extends asd.Scene
 			return;
 		}
 		// 2駒のテクスチャが異なる場合選択を解除する
-		else if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture())
+		if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture())
 		{
 			obj_pieces[p1].setIsColored(false);
 			obj_pieces[p2].setIsColored(false);
 			return;
 		}
 
-		// y座標が同じ場合 2駒間がクリアか"行"を調べる	
-		if (p1/12 == p2/12)
-		{
-			System.out.println("y座標が同じ場合");
-			paired = CheckLine(p1, p2, p1, p2, true);
-		}
-
-		// x座標が同じ場合 2駒間がクリアか"列"を調べる
-		if (p1%12 == p2%12)
-		{
-			System.out.println("x座標が同じ場合");
-			paired = CheckLine(p1, p2, p1, p2, false);
-			// paired = CheckLines(p1, p2, true);
-		}
-
-		// 2駒間に1角以上ある場合を調べる
 		if (!paired) paired = CheckLines(p1, p2, true);
 		if (!paired) paired = CheckLines(p1, p2, false);
 
@@ -215,5 +203,12 @@ class Game_Scene extends asd.Scene
 		}
 
 		return false;
+	}
+
+	boolean CheckClear() {
+		for (int i = 0; i < 144; i++) {
+			if (obj_pieces[i] != null) return false;
+		}
+		return true;
 	}
 }
