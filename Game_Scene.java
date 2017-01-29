@@ -4,6 +4,7 @@ class Game_Scene extends asd.Scene
 {
 	PieceObject[] obj_pieces;
 	asd.Layer2D layer;
+	boolean cleared = false;
     protected void OnRegistered()
     {
 		// レイヤーを作る。
@@ -40,18 +41,33 @@ class Game_Scene extends asd.Scene
 			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
 			layer.AddObject(obj_pieces[i]);
 		}
+
+		// タイマーをセットする
 	}
 
 	protected void OnUpdated()
 	{
+		// タイマーを更新する
+
+		// チートモード
+		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
+			System.out.println("チートモード");
+			for (int i=0; i < obj_pieces.length; i++) {
+				layer.RemoveObject(obj_pieces[i]);
+				obj_pieces[i] = null;
+			}
+		}
+
+		// 成立しているペアが無いか走査する
 		CheckPaired();
+
+		// クリア時は画面遷移する
 		if (CheckClear()) {
 			System.out.println("画面遷移します");
-			asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
-			try {
-				Thread.sleep(3000); //3000ミリ秒Sleepする
+			if (cleared == false) {
+				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+				cleared = true;
 			}
-			catch(InterruptedException e) {}
 		}
     }
 
