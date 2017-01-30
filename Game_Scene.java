@@ -5,6 +5,7 @@ class Game_Scene extends asd.Scene
 	PieceObject[] obj_pieces;
 	asd.Layer2D layer;
 	boolean cleared = false;
+	GameTimer gtimer;
     protected void OnRegistered()
     {
 		// レイヤーを作る。
@@ -43,11 +44,14 @@ class Game_Scene extends asd.Scene
 		}
 
 		// タイマーをセットする
+		gtimer = new GameTimer();
+		gtimer.setStartTime();
 	}
 
 	protected void OnUpdated()
 	{
 		// タイマーを更新する
+		System.out.println(gtimer.getTime() / 1000);
 
 		// チートモード
 		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
