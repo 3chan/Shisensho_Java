@@ -3,6 +3,7 @@ import java.util.*;
 class Game_Scene extends asd.Scene
 {
 	PieceObject[] obj_pieces;
+	FigureObject[] obj_figures;
 	asd.Layer2D layer;
 	boolean cleared = false;
 	GameTimer gtimer;
@@ -16,7 +17,7 @@ class Game_Scene extends asd.Scene
 		PieceObject obj = new PieceObject();
 		asd.Texture2D tex = asd.Engine.getGraphics().CreateTexture2D("res\\game.png");
 		obj.setTexture(tex);
-		layer.AddObject(obj);
+		layer.AddObject(obj);		
 
 		// 駒の画像を読み込み、144個のオブジェクトに設定する。
 		obj_pieces = new PieceObject[144];
@@ -37,10 +38,27 @@ class Game_Scene extends asd.Scene
 			ShufflePiecePosition();
 		}
 
+
+		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
 		for (int i=0; i<144; i++)
 		{
-			// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
 			layer.AddObject(obj_pieces[i]);
+		}
+
+		// タイマー用の数字を読み込み、11個のオブジェクトに設定する
+		obj_figures = new FigureObject[11];
+		asd.Texture2D tex_figures = asd.Engine.getGraphics().CreateTexture2D("res\\number.png");
+
+		// 数字のテクスチャを登録する
+		for (int i=0; i<11; i++) {
+			obj_figures[i] = new FigureObject();
+			obj_figures[i].setTexture(tex_figures);
+			obj_figures[i].setFigureTexture(i);
+		}
+
+		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
+		for (int i=0; i<11; i++) {
+			layer.AddObject(obj_figures[i]);
 		}
 
 		// タイマーをセットする
@@ -52,6 +70,7 @@ class Game_Scene extends asd.Scene
 	{
 		// タイマーを更新する
 		System.out.println(gtimer.getTime() / 1000);
+		DrawTimer(gtimer.getTime() / 1000);
 
 		// チートモード
 		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
@@ -231,4 +250,38 @@ class Game_Scene extends asd.Scene
 		}
 		return true;
 	}
+
+	// タイマーを描画する
+	void DrawTimer(int nowTime) {
+		int d = (int)Math.pow(10, 3);
+		int num;
+
+		// DEBUG
+		for (int j = 0 ; j < 4; j++) {
+			for (int k = 0; k < 11; k++) {
+				System.out.print(obj_figures[k].getIsPlaced(j) + " ");
+			}
+			System.out.println();
+		}
+
+		System.out.println("DrawTimer");
+		for (int i = 0; i < 4; i++) {
+			num = nowTime / d;
+			// if (!obj_figures[num].getIsPlaced(i)) {
+				System.out.println("num = " + num);
+				System.out.println("Drawing: " + num + " at " + i);
+				obj_figures[num].setPosition(new asd.Vector2DF(50 + i * 20, 50 + 12 * 40 + 10));
+				obj_figures[num].setIsPlaced(i, true);
+
+			// 	if (num == 0) {
+			// 		obj_figures[9].setIsPlaced(i, false);
+			// 	}
+			// 	else {
+			// 		obj_figures[num - 1].setIsPlaced(i, false);
+			// 	}
+			// }
+			nowTime %= d;
+			d /= 10;
+		}
+ 	}
 }
