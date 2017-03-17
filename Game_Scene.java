@@ -4,6 +4,7 @@ class Game_Scene extends asd.Scene
 {
 	PieceObject[] obj_pieces;
 	FigureObject[] obj_figures;
+	NewGameObject obj_newGame;
 	asd.Layer2D layer;
 	boolean cleared = false;
 	GameTimer gtimer;
@@ -38,28 +39,38 @@ class Game_Scene extends asd.Scene
 			ShufflePiecePosition();
 		}
 
-
 		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
 		for (int i=0; i<144; i++)
 		{
 			layer.AddObject(obj_pieces[i]);
 		}
 
-		// タイマー用の数字を読み込み、11個のオブジェクトに設定する
-		obj_figures = new FigureObject[11];
-		asd.Texture2D tex_figures = asd.Engine.getGraphics().CreateTexture2D("res\\number.png");
+		// タイマー用の数字を読み込み、5個のオブジェクトに設定する
+		obj_figures = new FigureObject[5];
+		asd.Texture2D tex_figures = asd.Engine.getGraphics().CreateTexture2D("res\\number_ed.png");
 
-		// 数字のテクスチャを登録する
-		for (int i=0; i<11; i++) {
+		// 数字とコロンのテクスチャを初期化する
+		for (int i=0; i<5; i++) {
 			obj_figures[i] = new FigureObject();
 			obj_figures[i].setTexture(tex_figures);
-			obj_figures[i].setFigureTexture(i);
+			if (i == 2) obj_figures[i].init4timer(10, i);
+			else obj_figures[i].init4timer(0, i);
 		}
 
 		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
-		for (int i=0; i<11; i++) {
+		for (int i=0; i<5; i++) {
 			layer.AddObject(obj_figures[i]);
 		}
+
+		// アイコンの画像を読み込む
+		asd.Texture2D tex_icons = asd.Engine.getGraphics().CreateTexture2D("res\\icon_ed.png");
+
+		// アイコンごとにテクスチャと位置を初期化する
+			// NewGame
+			obj_newGame = new NewGameObject();
+			obj_newGame.setTexture(tex_icons);
+			obj_newGame.init(0, 0);
+			layer.AddObject(obj_newGame);
 
 		// タイマーをセットする
 		gtimer = new GameTimer();
@@ -256,30 +267,14 @@ class Game_Scene extends asd.Scene
 		int d = (int)Math.pow(10, 3);
 		int num;
 
-		// DEBUG
-		for (int j = 0 ; j < 4; j++) {
-			for (int k = 0; k < 11; k++) {
-				System.out.print(obj_figures[k].getIsPlaced(j) + " ");
-			}
-			System.out.println();
-		}
-
 		System.out.println("DrawTimer");
-		for (int i = 0; i < 4; i++) {
-			num = nowTime / d;
-			// if (!obj_figures[num].getIsPlaced(i)) {
-				System.out.println("num = " + num);
-				System.out.println("Drawing: " + num + " at " + i);
-				obj_figures[num].setPosition(new asd.Vector2DF(50 + i * 20, 50 + 12 * 40 + 10));
-				obj_figures[num].setIsPlaced(i, true);
+		for (int i = 0; i < 5; i++) {
+			if (i == 2) continue;  // コロンは飛ばす
 
-			// 	if (num == 0) {
-			// 		obj_figures[9].setIsPlaced(i, false);
-			// 	}
-			// 	else {
-			// 		obj_figures[num - 1].setIsPlaced(i, false);
-			// 	}
-			// }
+			num = nowTime / d;  // 千の位から順に数値を取り出す
+			System.out.println("Drawing: " + num + " at " + i);
+			obj_figures[i].setFigureTexture(num);
+
 			nowTime %= d;
 			d /= 10;
 		}
