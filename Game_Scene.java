@@ -2,12 +2,17 @@ import java.util.*;
 
 class Game_Scene extends asd.Scene
 {
+	PieceObject obj;
 	PieceObject[] obj_pieces;
 	FigureObject[] obj_figures;
 	NewGameObject obj_newGame;
+	PauseGameObject obj_pauseGame;
 	asd.Layer2D layer;
-	boolean cleared = false;
+	boolean cleared;
 	GameTimer gtimer;
+	boolean pauseStart;
+	boolean isPause;
+	boolean pauseEnd;
     protected void OnRegistered()
     {
 		// レイヤーを作る。
@@ -15,7 +20,7 @@ class Game_Scene extends asd.Scene
 		AddLayer(layer);
  
 		// 背景画像を読み込み (略) レイヤーにオブジェクトを追加する。
-		PieceObject obj = new PieceObject();
+		obj = new PieceObject();
 		asd.Texture2D tex = asd.Engine.getGraphics().CreateTexture2D("res\\game.png");
 		obj.setTexture(tex);
 		layer.AddObject(obj);		
@@ -71,6 +76,14 @@ class Game_Scene extends asd.Scene
 			obj_newGame.setTexture(tex_icons);
 			obj_newGame.init(0, 0);
 			layer.AddObject(obj_newGame);
+			// UndoAll
+			// UndoOnce
+			// Pause/Play
+			obj_pauseGame = new PauseGameObject();
+			obj_pauseGame.setTexture(tex_icons);
+			obj_pauseGame.init(3, 3);
+			layer.AddObject(obj_pauseGame);
+			// Hint
 
 		// タイマーをセットする
 		gtimer = new GameTimer();
@@ -79,9 +92,29 @@ class Game_Scene extends asd.Scene
 
 	protected void OnUpdated()
 	{
-		// タイマーを更新する
-		System.out.println(gtimer.getTime() / 1000);
-		DrawTimer(gtimer.getTime() / 1000);
+		// ポーズボタンがクリックされた時
+		if (pauseEnd) {
+			System.out.println("pauseEnd");
+			isPause = false;
+			pauseEnd = false;
+			obj.setColor(new asd.Color(255,255,255));
+			gtimer.setIsPause(false);
+		}
+		else if (pauseStart) {
+			System.out.println("pauseStart");
+			pauseStart = false;
+			isPause = true;
+			gtimer.setIsPause(true);
+		}
+		else if (isPause) {
+			obj.setColor(new asd.Color(100,100,100));
+			return;
+		}
+		// 通常はタイマーを更新する
+		else {
+			System.out.println(gtimer.getTime() / 1000);
+			DrawTimer(gtimer.getTime() / 1000);
+		}
 
 		// チートモード
 		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
