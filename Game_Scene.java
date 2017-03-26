@@ -297,19 +297,26 @@ class Game_Scene extends asd.Scene
 
 	// タイマーを描画する
 	void DrawTimer(int nowTime) {
-		int d = (int)Math.pow(10, 3);
-		int num;
+		int num = 0;
 
 		System.out.println("DrawTimer");
-		for (int i = 0; i < 5; i++) {
-			if (i == 2) continue;  // コロンは飛ばす
+		for (int i = 0; i < 5; i++) {  // 01234 の順に 分分：秒秒
+			// コロンは飛ばす
+			if (i == 2) continue;
 
-			num = nowTime / d;  // 千の位から順に数値を取り出す
-			System.out.println("Drawing: " + num + " at " + i);
-			obj_figures[i].setFigureTexture(num);
+			// 分または秒を取得
+			if (i < 2) num = nowTime / 60;
+			else if (2 < i) num = nowTime % 60;
 
-			nowTime %= d;
-			d /= 10;
+			// 描画
+			if (i == 0 || i == 3) {  // 10の位だったら
+				System.out.println("Drawing: " + num / 10 + " at " + i);
+				obj_figures[i].setFigureTexture(num / 10);
+			}
+			else  {  // 1の位だったら
+				System.out.println("Drawing: " + num % 10 + " at " + i);
+				obj_figures[i].setFigureTexture(num % 10);
+			}
 		}
  	}
 }
