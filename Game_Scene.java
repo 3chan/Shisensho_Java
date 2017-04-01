@@ -6,9 +6,11 @@ class Game_Scene extends asd.Scene
 	PieceObject[] obj_pieces;
 	FigureObject[] obj_figures;
 	NewGameObject obj_newGame;
+	UndoAllObject obj_undoAll;
 	PauseGameObject obj_pauseGame;
 	asd.Layer2D layer;
 	boolean cleared;
+	History his;
 	GameTimer gtimer;
 	boolean pauseStart;
 	boolean isPause;
@@ -77,6 +79,10 @@ class Game_Scene extends asd.Scene
 			obj_newGame.init(0, 0);
 			layer.AddObject(obj_newGame);
 			// UndoAll
+			obj_undoAll = new UndoAllObject();
+			obj_undoAll.setTexture(tex_icons);
+			obj_undoAll.init(1, 1);
+			layer.AddObject(obj_undoAll);
 			// UndoOnce
 			// Pause/Play
 			obj_pauseGame = new PauseGameObject();
@@ -84,6 +90,10 @@ class Game_Scene extends asd.Scene
 			obj_pauseGame.init(3, 3);
 			layer.AddObject(obj_pauseGame);
 			// Hint
+
+		// Undo用に駒の情報を保存
+		his = new History();
+		his.setHisAll(obj_pieces);
 
 		// タイマーをセットする
 		gtimer = new GameTimer();
@@ -99,12 +109,14 @@ class Game_Scene extends asd.Scene
 			pauseEnd = false;
 			obj.setColor(new asd.Color(255,255,255));
 			gtimer.setIsPause(false);
+			return;
 		}
 		else if (pauseStart) {
 			System.out.println("pauseStart");
 			pauseStart = false;
 			isPause = true;
 			gtimer.setIsPause(true);
+			return ;
 		}
 		else if (isPause) {
 			obj.setColor(new asd.Color(100,100,100));
@@ -186,6 +198,8 @@ class Game_Scene extends asd.Scene
 		if (!paired) paired = CheckLines(p1, p2, false);
 
 		if (paired) {
+			System.out.println("History に登録します");
+			his.setHis(obj_pieces[p1], obj_pieces[p2]);
 			System.out.println("駒を消します");
 			layer.RemoveObject(obj_pieces[p1]);
 			layer.RemoveObject(obj_pieces[p2]);
