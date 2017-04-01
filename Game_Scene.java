@@ -17,7 +17,7 @@ class Game_Scene extends asd.Scene
 	boolean pauseEnd;
     protected void OnRegistered()
     {
-		// レイヤーを作る。
+		// レイヤーを作り、シーンにレイヤーを追加する
  		layer = new asd.Layer2D();
 		AddLayer(layer);
  
@@ -46,7 +46,7 @@ class Game_Scene extends asd.Scene
 			ShufflePiecePosition();
 		}
 
-		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
+		// レイヤーにオブジェクトを追加する。
 		for (int i=0; i<144; i++)
 		{
 			layer.AddObject(obj_pieces[i]);
@@ -64,7 +64,7 @@ class Game_Scene extends asd.Scene
 			else obj_figures[i].init4timer(0, i);
 		}
 
-		// シーンにレイヤーを追加し、そのレイヤーにオブジェクトを追加する。
+		// レイヤーにオブジェクトを追加する。
 		for (int i=0; i<5; i++) {
 			layer.AddObject(obj_figures[i]);
 		}
@@ -160,8 +160,7 @@ class Game_Scene extends asd.Scene
 		obj_pieces[rnd2].setPieceTexture(buf);
 	}
 
-	void CheckPaired()
-	{
+	void CheckPaired() {
 		int p1 = -1;
 		int p2 = -1;
 		boolean paired = false;
@@ -169,26 +168,21 @@ class Game_Scene extends asd.Scene
 		// 選択中の駒を検出
 		for (int i=0; i<144; i++) {
 			if (obj_pieces[i] == null || !obj_pieces[i].isColored) continue;
-			if (p1 == -1)
-			{
+			if (p1 == -1) {
 				p1 = i;
 				System.out.println("p1 = " + p1);
 			}
-			else
-			{
+			else {
 				p2 = i;
 				System.out.println("p2 = " + p2);
 			}
 		}
 		
 		// 選択なしまたは1駒のみ選択中の場合何もしない
-		if (p1 == -1 || p2 == -1)
-		{
-			return;
-		}
+		if (p1 == -1 || p2 == -1) return;
+
 		// 2駒のテクスチャが異なる場合選択を解除する
-		if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture())
-		{
+		if (obj_pieces[p1].getPieceTexture() != obj_pieces[p2].getPieceTexture()) {
 			obj_pieces[p1].setIsColored(false);
 			obj_pieces[p2].setIsColored(false);
 			return;
@@ -196,6 +190,10 @@ class Game_Scene extends asd.Scene
 
 		if (!paired) paired = CheckLines(p1, p2, true);
 		if (!paired) paired = CheckLines(p1, p2, false);
+
+		// ここで選択解除しないと UndoAll した際に CheckPaired へ戻ってきてしまう
+		obj_pieces[p1].setIsColored(false);
+		obj_pieces[p2].setIsColored(false);
 
 		if (paired) {
 			System.out.println("History に登録します");
@@ -206,10 +204,6 @@ class Game_Scene extends asd.Scene
 			obj_pieces[p1] = null;
 			obj_pieces[p2] = null;
 			System.out.println("駒を消しました");
-		}
-		else {
-			obj_pieces[p1].setIsColored(false);
-			obj_pieces[p2].setIsColored(false);
 		}
 	}
 	
