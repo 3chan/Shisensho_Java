@@ -1,12 +1,12 @@
 import java.util.*;
 
-class Game_Scene extends asd.Scene
-{
+class Game_Scene extends asd.Scene {
 	PieceObject obj;
 	PieceObject[] obj_pieces;
 	FigureObject[] obj_figures;
 	NewGameObject obj_newGame;
 	UndoAllObject obj_undoAll;
+	UndoOnceObject obj_undoOnce;
 	PauseGameObject obj_pauseGame;
 	asd.Layer2D layer;
 	boolean cleared;
@@ -15,8 +15,8 @@ class Game_Scene extends asd.Scene
 	boolean pauseStart;
 	boolean isPause;
 	boolean pauseEnd;
-    protected void OnRegistered()
-    {
+
+    protected void OnRegistered() {
 		// レイヤーを作り、シーンにレイヤーを追加する
  		layer = new asd.Layer2D();
 		AddLayer(layer);
@@ -32,8 +32,7 @@ class Game_Scene extends asd.Scene
 		asd.Texture2D tex_pieces = asd.Engine.getGraphics().CreateTexture2D("res\\pieces.png");
 
 		// 駒の位置を初期化し、テクスチャを登録する
-		for (int i=0; i<144; i++)
-		{
+		for (int i=0; i<144; i++) {
 			obj_pieces[i] = new PieceObject();
 			obj_pieces[i].setPiecePosition(i);
 			obj_pieces[i].setTexture(tex_pieces);
@@ -41,14 +40,12 @@ class Game_Scene extends asd.Scene
 		}
 
 		// 駒の描画位置をランダムにする
-		for (int i=0; i<800; i++)
-		{
+		for (int i=0; i<800; i++) {
 			ShufflePiecePosition();
 		}
 
 		// レイヤーにオブジェクトを追加する。
-		for (int i=0; i<144; i++)
-		{
+		for (int i=0; i<144; i++) {
 			layer.AddObject(obj_pieces[i]);
 		}
 
@@ -84,6 +81,10 @@ class Game_Scene extends asd.Scene
 			obj_undoAll.init(1, 1);
 			layer.AddObject(obj_undoAll);
 			// UndoOnce
+			obj_undoOnce = new UndoOnceObject();
+			obj_undoOnce.setTexture(tex_icons);
+			obj_undoOnce.init(2, 2);
+			layer.AddObject(obj_undoOnce);
 			// Pause/Play
 			obj_pauseGame = new PauseGameObject();
 			obj_pauseGame.setTexture(tex_icons);
@@ -131,7 +132,7 @@ class Game_Scene extends asd.Scene
 		// チートモード
 		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
 			System.out.println("チートモード");
-			for (int i=0; i < obj_pieces.length; i++) {
+			for (int i=0; i < 144; i++) {
 				layer.RemoveObject(obj_pieces[i]);
 				obj_pieces[i] = null;
 			}

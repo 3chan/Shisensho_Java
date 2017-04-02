@@ -1,12 +1,12 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 class History {
     PieceObject hisAll[];
-    ArrayList<PieceObject> his;
+    LinkedList<PieceObject> his;
 
     History() {  // コンストラクタ
         hisAll = new PieceObject[144];
-        his = new ArrayList<PieceObject>();        
+        his = new LinkedList<PieceObject>();        
     }
 
     // UndoAll用
@@ -23,12 +23,17 @@ class History {
 
     // Undo用
     public void setHis(PieceObject po1, PieceObject po2) {
-        his.add(po1);  // .add はディープコピー???
-        his.add(po2);
+        his.addLast(po1);
+        his.addLast(po2);
     }
 
     // Undo用
     public PieceObject getHis() {
-        return his.get(his.size() - 1);
+        return his.pollLast();
+    }
+
+    // Undo用
+    public PieceObject isNull() {
+        return his.peekLast();
     }
 }
