@@ -51,7 +51,7 @@ class Game_Scene extends asd.Scene {
 
 		// タイマー用の数字を読み込み、5個のオブジェクトに設定する
 		obj_figures = new FigureObject[5];
-		asd.Texture2D tex_figures = asd.Engine.getGraphics().CreateTexture2D("res\\number_ed.png");
+		asd.Texture2D tex_figures = asd.Engine.getGraphics().CreateTexture2D("res\\number_black.png");
 
 		// 数字とコロンのテクスチャを初期化する
 		for (int i=0; i<5; i++) {
@@ -67,7 +67,7 @@ class Game_Scene extends asd.Scene {
 		}
 
 		// アイコンの画像を読み込む
-		asd.Texture2D tex_icons = asd.Engine.getGraphics().CreateTexture2D("res\\icon_ed.png");
+		asd.Texture2D tex_icons = asd.Engine.getGraphics().CreateTexture2D("res\\icon_black.png");
 
 		// アイコンごとにテクスチャと位置を初期化する
 			// NewGame
@@ -108,8 +108,11 @@ class Game_Scene extends asd.Scene {
 			System.out.println("pauseEnd");
 			isPause = false;
 			pauseEnd = false;
-			obj.setColor(new asd.Color(255,255,255));
 			gtimer.setIsPause(false);
+			// 画面の色を戻す
+			obj.setColor(new asd.Color(255,255,255));
+			// アイコンを戻す
+			obj_pauseGame.setPauseTexture(3);
 			return;
 		}
 		else if (pauseStart) {
@@ -117,12 +120,16 @@ class Game_Scene extends asd.Scene {
 			pauseStart = false;
 			isPause = true;
 			gtimer.setIsPause(true);
+			// アイコンを設定する
+			obj_pauseGame.setPauseTexture(5);
 			return ;
 		}
 		else if (isPause) {
+			// 画面の色を設定する
 			obj.setColor(new asd.Color(100,100,100));
 			return;
 		}
+
 		// 通常はタイマーを更新する
 		else {
 			System.out.println(gtimer.getTime() / 1000);

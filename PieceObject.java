@@ -1,13 +1,17 @@
 class PieceObject extends asd.TextureObject2D
 {
     boolean isColored;
+    boolean isColoredGray;
     int pieceTexture;  // 36種類中どの絵柄かを 0～35 で表す
     int piecePosition;  // 駒の盤上の位置を 0~143 で表す
-    protected void OnUpdate()
-    {   // シーン・レイヤーに関してはOnUpdated()またはOnUpdating()
-        if((asd.Engine.getMouse().getLeftButton().getButtonState() != asd.MouseButtonState.Push))  // return する条件を先に書くと {} が増えなくてよい
-        {
-            if (!isColored) setColor(new asd.Color(255,255,255));
+    
+    protected void OnUpdate() {   // シーン・レイヤーに関してはOnUpdated()またはOnUpdating()
+        // ポーズ中かどうか
+        isColoredGray = ((Game_Scene)getLayer().getScene()).isPause;
+        
+        if ((asd.Engine.getMouse().getLeftButton().getButtonState() != asd.MouseButtonState.Push)) {  // return する条件を先に書くと {} が増えなくてよい
+            if (isColoredGray) setColor(new asd.Color(100,100,100));
+            else if (!isColored) setColor(new asd.Color(255,255,255));
             else setColor(new asd.Color(255,0,0));
             return;
         }
@@ -19,15 +23,15 @@ class PieceObject extends asd.TextureObject2D
         if (mousePos.X < pos0.X || pos1.X <= mousePos.X || mousePos.Y < pos0.Y || pos1.Y <= mousePos.Y) return;
 
         // 駒の色を変更
-        if (!isColored)
-        {
-            isColored = true;
-            setColor(new asd.Color(255,0,0));
-        }
-        else
-        {
-            isColored = false;
-            setColor(new asd.Color(255,255,255));
+        if (!isColoredGray) {
+            if (!isColored) {
+                isColored = true;
+                setColor(new asd.Color(255,0,0));
+            }
+            else {
+                isColored = false;
+                setColor(new asd.Color(255,255,255));
+            }
         }
     }
 
@@ -67,5 +71,9 @@ class PieceObject extends asd.TextureObject2D
     boolean getIsColored()
     {
         return isColored;
+    }
+
+    void setIsColoredGray(boolean pStateGray) {
+        isColoredGray = pStateGray;
     }
 }
