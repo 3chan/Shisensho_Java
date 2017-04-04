@@ -1,5 +1,7 @@
-import java.lang.reflect.Method;
 import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class Clear_Scene extends asd.Scene
 {
@@ -9,6 +11,7 @@ class Clear_Scene extends asd.Scene
 	asd.TextureObject2D obj;
 	AlphabetObject[] obj_alphabets;
 	ArrayList<asd.Keys> keys;
+	File file;
 
     protected void OnRegistered() {
 		// レイヤーを作りシーンにレイヤーを追加する
@@ -64,7 +67,7 @@ class Clear_Scene extends asd.Scene
 		keys.add(asd.Keys.Backspace);
 		keys.add(asd.Keys.Left);
 		keys.add(asd.Keys.Right);
-		keys.add(asd.Keys.Enter);		
+		keys.add(asd.Keys.Enter);
 	}
 
 	protected void OnUpdated() {

@@ -1,4 +1,7 @@
 import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class Game_Scene extends asd.Scene {
 	PieceObject obj;
@@ -15,6 +18,8 @@ class Game_Scene extends asd.Scene {
 	boolean pauseStart;
 	boolean isPause;
 	boolean pauseEnd;
+	File file;
+	FileWriter filewriter;
 
     protected void OnRegistered() {
 		// レイヤーを作り、シーンにレイヤーを追加する
@@ -99,6 +104,16 @@ class Game_Scene extends asd.Scene {
 		// タイマーをセットする
 		gtimer = new GameTimer();
 		gtimer.setStartTime();
+
+		// スコア記録用のファイルを (なければ) 作る
+		try {
+			file = new File("score.txt");
+			file.createNewFile();
+			filewriter = new FileWriter(file);
+		}
+		catch(IOException e) {
+			System.out.println(e);
+		}
 	}
 
 	protected void OnUpdated()
@@ -138,7 +153,7 @@ class Game_Scene extends asd.Scene {
 
 		// チートモード
 		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
-			System.out.println("チートモード");
+			System.out.println("チートモード (駒が全て残っている状態以外で発動すると落ちる)");
 			for (int i=0; i < 144; i++) {
 				layer.RemoveObject(obj_pieces[i]);
 				obj_pieces[i] = null;
@@ -148,8 +163,14 @@ class Game_Scene extends asd.Scene {
 		// 成立しているペアが無いか走査する
 		CheckPaired();
 
-		// クリア時は画面遷移する
+		// クリア時はタイムを記録し画面遷移する
 		if (CheckClear()) {
+			try {
+				filewriter.write(gtimer.getTime() / 1000);
+			}
+			catch (IOException e) {
+				System.out.println(e);
+			}
 			System.out.println("画面遷移します");
 			if (cleared == false) {
 				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
