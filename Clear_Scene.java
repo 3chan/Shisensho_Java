@@ -75,8 +75,8 @@ class Clear_Scene extends asd.Scene
 
 			// BackSpace
 			if (i == 27) {
+				if ((0 < focus && focus < obj_alphabets.length - 1) || (focus == obj_alphabets.length - 1 && obj_alphabets[obj_alphabets.length - 1].getAlphabetTexture() == 26)) focus --;
 				obj_alphabets[focus].setAlphabetTexture(26);
-				if (0 < focus) focus--;
 				break;
 			}
 
@@ -107,6 +107,7 @@ class Clear_Scene extends asd.Scene
 
 			// A-Z
 			obj_alphabets[focus].setAlphabetTexture(i);
+			if (focus < obj_alphabets.length - 1) focus++;
 		}
     }
 }
