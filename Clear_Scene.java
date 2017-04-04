@@ -2,9 +2,11 @@ import java.util.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 class Clear_Scene extends asd.Scene
 {
+	int score;
 	int focus;
 	boolean enter;
 	asd.Layer2D layer;
@@ -12,6 +14,12 @@ class Clear_Scene extends asd.Scene
 	AlphabetObject[] obj_alphabets;
 	ArrayList<asd.Keys> keys;
 	File file;
+	FileWriter filewriter;
+	DecimalFormat deciscore;
+
+	Clear_Scene(int s) {
+		score = s;
+	}
 
     protected void OnRegistered() {
 		// レイヤーを作りシーンにレイヤーを追加する
@@ -68,6 +76,19 @@ class Clear_Scene extends asd.Scene
 		keys.add(asd.Keys.Left);
 		keys.add(asd.Keys.Right);
 		keys.add(asd.Keys.Enter);
+
+		// スコア記録用のファイルを (なければ) 作る
+		try {
+			file = new File("score.txt");
+			file.createNewFile();
+			filewriter = new FileWriter(file, true);
+		}
+		catch(IOException e) {
+			System.out.println(e);
+		}
+
+		// スコアを4桁で表示するための設定
+		deciscore = new DecimalFormat("0000");
 	}
 
 	protected void OnUpdated() {
@@ -99,7 +120,19 @@ class Clear_Scene extends asd.Scene
 			// Enter
 			if (i == 30) {
 				// 外部ファイルに入力された文字列を保存
-
+				// Game_Scece からクリアタイムを持ってくるテスト
+				System.out.println("score = " + score);
+				try {
+					filewriter.write(deciscore.format(score));
+					for (int j = 0; j < obj_alphabets.length; j++) {
+						filewriter.write(obj_alphabets[j].toString());
+					}
+					filewriter.write("\r\n");
+					filewriter.close();
+				}
+				catch (IOException e) {
+					System.out.println(e);
+				}
 				// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
 				if (enter == false) {
 					asd.Engine.ChangeSceneWithTransition(new Title_Scene(), new asd.TransitionFade(1.0f, 1.5f));

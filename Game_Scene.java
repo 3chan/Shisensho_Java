@@ -1,7 +1,4 @@
 import java.util.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 class Game_Scene extends asd.Scene {
 	PieceObject obj;
@@ -18,8 +15,6 @@ class Game_Scene extends asd.Scene {
 	boolean pauseStart;
 	boolean isPause;
 	boolean pauseEnd;
-	File file;
-	FileWriter filewriter;
 
     protected void OnRegistered() {
 		// レイヤーを作り、シーンにレイヤーを追加する
@@ -104,16 +99,6 @@ class Game_Scene extends asd.Scene {
 		// タイマーをセットする
 		gtimer = new GameTimer();
 		gtimer.setStartTime();
-
-		// スコア記録用のファイルを (なければ) 作る
-		try {
-			file = new File("score.txt");
-			file.createNewFile();
-			filewriter = new FileWriter(file);
-		}
-		catch(IOException e) {
-			System.out.println(e);
-		}
 	}
 
 	protected void OnUpdated()
@@ -165,15 +150,9 @@ class Game_Scene extends asd.Scene {
 
 		// クリア時はタイムを記録し画面遷移する
 		if (CheckClear()) {
-			try {
-				filewriter.write(gtimer.getTime() / 1000);
-			}
-			catch (IOException e) {
-				System.out.println(e);
-			}
 			System.out.println("画面遷移します");
 			if (cleared == false) {
-				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(gtimer.getTime() / 1000), new asd.TransitionFade(1.0f, 1.5f));
 				cleared = true;
 			}
 		}

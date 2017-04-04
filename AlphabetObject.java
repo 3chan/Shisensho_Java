@@ -23,4 +23,8 @@ class AlphabetObject extends asd.TextureObject2D {
     int getAlphabetTexture() {
         return texture;
     }
+
+    public String toString() {
+        return String.valueOf(texture + 65);
+    }
 }
