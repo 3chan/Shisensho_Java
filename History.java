@@ -4,14 +4,14 @@ class History {
     PieceObject hisAll[];
     LinkedList<PieceObject> his;
 
-    History() {  // コンストラクタ
+    History() { // コンストラクタ
         hisAll = new PieceObject[144];
-        his = new LinkedList<PieceObject>();        
+        his = new LinkedList<PieceObject>();
     }
 
     // UndoAll用
     public void setHisAll(PieceObject po[]) {
-        for (int i = 0; i < 144; i++) {  // 配列のコピー
+        for (int i = 0; i < 144; i++) { // 配列のコピー
             hisAll[i] = po[i];
         }
     }

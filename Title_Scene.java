@@ -1,10 +1,8 @@
-class Title_Scene extends asd.Scene
-{
+class Title_Scene extends asd.Scene {
 	boolean flag;
 
-    protected void OnRegistered()
-    {
-        // 画像を読み込み、オブジェクトに設定する。
+	protected void OnRegistered() {
+		// 画像を読み込み、オブジェクトに設定する。
 		asd.TextureObject2D obj = new asd.TextureObject2D();
 		asd.Texture2D tex = asd.Engine.getGraphics().CreateTexture2D("res\\start.png");
 		obj.setTexture(tex);
@@ -14,9 +12,11 @@ class Title_Scene extends asd.Scene
 		AddLayer(layer);
 		layer.AddObject(obj);
 	}
+
 	protected void OnUpdated() {
 		// マウスの左ボタンまたは Enter が押されるのを待つ。
-		if((asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push) || (asd.Engine.getKeyboard().GetKeyState(asd.Keys.Enter) == asd.KeyState.Push)) {
+		if ((asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push)
+				|| (asd.Engine.getKeyboard().GetKeyState(asd.Keys.Enter) == asd.KeyState.Push)) {
 			// フェードアウト・インによるシーン遷移を開始する。
 			// 0.5秒かけてフェードアウトし、0.2秒かけてフェードイン。
 			if (!flag) {
@@ -24,5 +24,5 @@ class Title_Scene extends asd.Scene
 				flag = true;
 			}
 		}
-    }
+	}
 }

@@ -7,11 +7,9 @@ class ScoreComparator implements Comparator<Score> {
 
         if (sc1 > sc2) {
             return 1;
-        }
-        else if (sc1 == sc2) {
+        } else if (sc1 == sc2) {
             return 0;
-        }
-        else {
+        } else {
             return -1;
         }
     }

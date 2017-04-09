@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 class Rank_Scene extends asd.Scene {
     asd.Layer2D layer;
-	asd.TextureObject2D obj;
+    asd.TextureObject2D obj;
     ArrayList<Score> score;
     FigureObject[][] time;
     AlphabetObject[][] name;
@@ -30,25 +30,22 @@ class Rank_Scene extends asd.Scene {
                 if (!flag) {
                     t = Integer.parseInt(str);
                     flag = true;
-                }
-                else {
+                } else {
                     n = str;
                     flag = false;
                     score.add(new Score(t, n));
                 }
             }
             br.close();
-        }
-        catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println(e);
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
 
         // スコアをソートする
         Collections.sort(score, new ScoreComparator());
-        
+
         // レイヤーを作りシーンにレイヤーを追加する
         asd.Layer2D layer = new asd.Layer2D();
         AddLayer(layer);
@@ -72,22 +69,25 @@ class Rank_Scene extends asd.Scene {
         for (int i = 0; i < 5; i++) {
             // スコアから上位タイムを1位から順に取得する
             // 記録されているスコアが5つ未満なら抜ける            
-            if (score.size() <= i) break;
-            
+            if (score.size() <= i)
+                break;
+
             // 数字とコロンのテクスチャを設定する
-            numt = score.get(i).getTime();            
+            numt = score.get(i).getTime();
             for (int j = 0; j < 5; j++) {
                 System.out.println("numt[" + j + "] = " + numt[j]);
                 time[i][j] = new FigureObject();
                 time[i][j].setTexture(tex_figures);
-                if (j == 2) time[i][j].init4rank(10, j, i);
-                else time[i][j].init4rank(numt[j], j, i);
+                if (j == 2)
+                    time[i][j].init4rank(10, j, i);
+                else
+                    time[i][j].init4rank(numt[j], j, i);
                 // レイヤーにオブジェクトを追加する
                 layer.AddObject(time[i][j]);
             }
 
             // アルファベットのテクスチャを設定する
-            for (int j = 0; j < 8; j++) {          
+            for (int j = 0; j < 8; j++) {
                 name[i][j] = new AlphabetObject();
                 name[i][j].setTexture(tex_alphabets);
                 name[i][j].init4rank(score.get(i).getName(j), j, i);
@@ -98,7 +98,8 @@ class Rank_Scene extends asd.Scene {
     }
 
     protected void OnUpdated() {
-        if ((asd.Engine.getKeyboard().GetKeyState(asd.Keys.Enter) == asd.KeyState.Push) || (asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push)) {
+        if ((asd.Engine.getKeyboard().GetKeyState(asd.Keys.Enter) == asd.KeyState.Push)
+                || (asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push)) {
             if (!change) {
                 asd.Engine.ChangeSceneWithTransition(new Title_Scene(), new asd.TransitionFade(0.5f, 0.2f));
                 change = true;

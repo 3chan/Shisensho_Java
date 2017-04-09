@@ -1,12 +1,10 @@
-class Main
-{
-    static
-    {
-       System.loadLibrary("Altseed_core");
-    }
-    public static void main(String[] args)
-    {
-        // Altseedを初期化する。
+class Main {
+	static {
+		System.loadLibrary("Altseed_core");
+	}
+
+	public static void main(String[] args) {
+		// Altseedを初期化する。
 		asd.Engine.Initialize("Main", 580, 655, new asd.EngineOption());
 
 		// シーンのインスタンスを生成する。
@@ -16,14 +14,12 @@ class Main
 		asd.Engine.ChangeScene(scene);
 
 		// Altseedのウインドウが閉じられていないか確認する。
-		while(asd.Engine.DoEvents())
-		{
+		while (asd.Engine.DoEvents()) {
 			// Altseedを更新する。
 			asd.Engine.Update();
 		}
-		
 
 		// Altseedを終了する。
 		asd.Engine.Terminate();
-    }
+	}
 }
