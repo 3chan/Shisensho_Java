@@ -151,8 +151,8 @@ class Game_Scene extends asd.Scene {
 		// ƒNƒŠƒAŽž‚Íƒ^ƒCƒ€‚ð‹L˜^‚µ‰æ–Ê‘JˆÚ‚·‚é
 		if (CheckClear()) {
 			System.out.println("‰æ–Ê‘JˆÚ‚µ‚Ü‚·");
-			if (cleared == false) {
-				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(gtimer.getTime() / 1000), new asd.TransitionFade(1.0f, 1.5f));
+			if (!cleared) {
+				asd.Engine.ChangeSceneWithTransition(new Clear_Scene(gtimer.getTime() / 1000), new asd.TransitionFade(0.5f, 0.2f));
 				cleared = true;
 			}
 		}

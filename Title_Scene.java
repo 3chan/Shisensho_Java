@@ -1,5 +1,7 @@
 class Title_Scene extends asd.Scene
 {
+	boolean flag;
+
     protected void OnRegistered()
     {
         // 画像を読み込み、オブジェクトに設定する。
@@ -13,12 +15,14 @@ class Title_Scene extends asd.Scene
 		layer.AddObject(obj);
 	}
 	protected void OnUpdated() {
-		// マウスの左ボタンが押されるのを待つ。
-		if((asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push))
-		{
+		// マウスの左ボタンまたは Enter が押されるのを待つ。
+		if((asd.Engine.getMouse().getLeftButton().getButtonState() == asd.MouseButtonState.Push) || (asd.Engine.getKeyboard().GetKeyState(asd.Keys.Enter) == asd.KeyState.Push)) {
 			// フェードアウト・インによるシーン遷移を開始する。
-			// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
-			asd.Engine.ChangeSceneWithTransition(new Game_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+			// 0.5秒かけてフェードアウトし、0.2秒かけてフェードイン。
+			if (!flag) {
+				asd.Engine.ChangeSceneWithTransition(new Game_Scene(), new asd.TransitionFade(0.5f, 0.2f));
+				flag = true;
+			}
 		}
     }
 }

@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
+// import java.text.DecimalFormat;
 
 class Clear_Scene extends asd.Scene
 {
@@ -15,7 +15,7 @@ class Clear_Scene extends asd.Scene
 	ArrayList<asd.Keys> keys;
 	File file;
 	FileWriter filewriter;
-	DecimalFormat deciscore;
+	// DecimalFormat deciscore;
 
 	Clear_Scene(int s) {
 		score = s;
@@ -32,15 +32,15 @@ class Clear_Scene extends asd.Scene
 		obj.setTexture(tex);
 		layer.AddObject(obj);
 
-		// アルファベットの画像を読み込み、10個のオブジェクトに設定する
-		obj_alphabets = new AlphabetObject[10];
+		// アルファベットの画像を読み込み、8個のオブジェクトに設定する
+		obj_alphabets = new AlphabetObject[8];
 		asd.Texture2D tex_alphabets = asd.Engine.getGraphics().CreateTexture2D("res\\alphabet_ed.png");
 
 		// アルファベットの位置とテクスチャを初期化し、レイヤーにオブジェクトを追加する
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<8; i++) {
 			obj_alphabets[i] = new AlphabetObject();
-			obj_alphabets[i].setTexture(tex_alphabets);  // 初期位置を空白 (debug: A) で指定しておく
-			obj_alphabets[i].init4clear(0, i);
+			obj_alphabets[i].setTexture(tex_alphabets);  // 初期位置を空白で指定しておく
+			obj_alphabets[i].init4clear(26, i);
 			layer.AddObject(obj_alphabets[i]);
 		}
 
@@ -88,7 +88,7 @@ class Clear_Scene extends asd.Scene
 		}
 
 		// スコアを4桁で表示するための設定
-		deciscore = new DecimalFormat("0000");
+		// deciscore = new DecimalFormat("0000");
 	}
 
 	protected void OnUpdated() {
@@ -123,9 +123,11 @@ class Clear_Scene extends asd.Scene
 				// Game_Scece からクリアタイムを持ってくるテスト
 				System.out.println("score = " + score);
 				try {
-					filewriter.write(deciscore.format(score));
+					// filewriter.write(deciscore.format(score));
+					filewriter.write(String.valueOf(score) + "\r\n");
 					for (int j = 0; j < obj_alphabets.length; j++) {
 						filewriter.write(obj_alphabets[j].toString());
+						filewriter.write(",");
 					}
 					filewriter.write("\r\n");
 					filewriter.close();
@@ -133,9 +135,9 @@ class Clear_Scene extends asd.Scene
 				catch (IOException e) {
 					System.out.println(e);
 				}
-				// 1秒かけてフェードアウトし、1.5秒かけてフェードイン。
+				// 0.5秒かけてフェードアウトし、0.2秒かけてフェードイン。
 				if (enter == false) {
-					asd.Engine.ChangeSceneWithTransition(new Title_Scene(), new asd.TransitionFade(1.0f, 1.5f));
+					asd.Engine.ChangeSceneWithTransition(new Rank_Scene(), new asd.TransitionFade(0.5f, 0.2f));
 					enter = true;
 				}
 				break;

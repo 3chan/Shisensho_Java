@@ -6,12 +6,13 @@ class AlphabetObject extends asd.TextureObject2D {
     }
 
     void init4clear(int tex, int pos) {
-        setPosition(new asd.Vector2DF(115 + pos * 35, 400));
+        setPosition(new asd.Vector2DF(210 + pos * 35, 400));
         setAlphabetTexture(tex);
     }
 
-    void init4rank() {
-
+    void init4rank(long tex, int posx, int posy) {
+        setPosition(new asd.Vector2DF(95 + posx * 35, 270 + posy * 70));
+        setAlphabetTexture((int)tex - 65);
     }
 
     void setAlphabetTexture(int aTexture) {
