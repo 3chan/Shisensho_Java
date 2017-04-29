@@ -5,7 +5,7 @@ class Main {
 
 	public static void main(String[] args) {
 		// Altseedを初期化する。
-		asd.Engine.Initialize("Main", 580, 655, new asd.EngineOption());
+		asd.Engine.Initialize("Shisensho", 580, 655, new asd.EngineOption());
 
 		// シーンのインスタンスを生成する。
 		Title_Scene scene = new Title_Scene();

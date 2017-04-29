@@ -136,13 +136,13 @@ class Game_Scene extends asd.Scene {
 		}
 
 		// チートモード
-		if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
-			System.out.println("チートモード (駒が全て残っている状態以外で発動すると落ちる)");
-			for (int i = 0; i < 144; i++) {
-				layer.RemoveObject(obj_pieces[i]);
-				obj_pieces[i] = null;
-			}
-		}
+		// if (asd.Engine.getMouse().getRightButton().getButtonState() == asd.MouseButtonState.Push) {
+		// 	System.out.println("チートモード (駒が全て残っている状態以外で発動すると落ちる)");
+		// 	for (int i = 0; i < 144; i++) {
+		// 		layer.RemoveObject(obj_pieces[i]);
+		// 		obj_pieces[i] = null;
+		// 	}
+		// }
 
 		// 成立しているペアが無いか走査する
 		CheckPaired();
